@@ -1,0 +1,82 @@
+name: service-desk
+
+services:
+  frontend:
+    container_name: serviceDeskAngular
+    build:
+      context: ./frontend
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+      - frontend_angular_cache:/app/.angular
+    depends_on:
+      - backend
+
+  backend:
+    container_name: serviceDeskApi
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      ConnectionStrings__Default: "Server=db;Port=3306;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};"
+      SeedAdmin__Email: ${ADMIN_EMAIL}
+      SeedAdmin__Password: ${ADMIN_PASSWORD}
+      Jwt__Key: ${JWT_KEY}
+      Barcode__AssetPrefix: ${BARCODE_ASSET_PREFIX:-1001}
+      Barcode__TicketPrefix: ${BARCODE_TICKET_PREFIX:-2001}
+      Barcode__AssetCategoryPrefix: ${BARCODE_ASSET_CATEGORY_PREFIX:-3001}
+      Storage__PhotosPath: /data/photos
+    volumes:
+      - ./backend:/src
+      - backend_bin:/src/bin
+      - backend_obj:/src/obj
+      - backend_photos:/data/photos
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    container_name: serviceDeskMySql
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  phpmyadmin:
+    container_name: serviceDeskPhpMyAdmin
+    image: phpmyadmin:latest
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - "${PHPMYADMIN_PORT}:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  frontend_node_modules:
+  frontend_angular_cache:
+  backend_bin:
+  backend_obj:
+  backend_photos:
+  mysql_data:

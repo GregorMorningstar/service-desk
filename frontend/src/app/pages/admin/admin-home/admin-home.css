@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.stat .value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.stat .label {
+  color: var(--text-muted);
+}
+
+.stat.warn .value {
+  color: var(--danger);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 1rem;
+  align-items: start;
+}

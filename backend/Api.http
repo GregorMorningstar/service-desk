@@ -1,0 +1,67 @@
+@api = http://localhost:8080/api/v1
+
+### Login (copy accessToken into @token below)
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{ "email": "admin@demo.local", "password": "Demo123!" }
+
+###
+@token = paste-access-token-here
+
+### Current user
+GET {{api}}/auth/me
+Authorization: Bearer {{token}}
+
+### Tickets
+GET {{api}}/tickets?status=New&page=1&pageSize=20
+Authorization: Bearer {{token}}
+
+### Create ticket
+POST {{api}}/tickets
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Brak połączenia z Wi-Fi",
+  "description": "Laptop nie łączy się z siecią biurową",
+  "categoryId": 3,
+  "priority": "High"
+}
+
+### Dashboard (admin)
+GET {{api}}/dashboard/stats
+Authorization: Bearer {{token}}
+
+### Ticket categories (any user)
+GET {{api}}/ticket-categories
+Authorization: Bearer {{token}}
+
+### Add ticket category (admin)
+POST {{api}}/ticket-categories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Drukowanie", "description": "Problemy z drukarkami" }
+
+### Inspection cards (staff: all, user: own devices only)
+GET {{api}}/inspections
+Authorization: Bearer {{token}}
+
+### Add inspection record (admin: approved at once, technician: pending)
+POST {{api}}/inspections/1/records
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "kind": "Inspection", "performedAt": "2026-11-01", "cost": 150.50, "nextInspectionDate": null, "description": "Przegląd roczny" }
+
+### Pending records (admin)
+GET {{api}}/inspections/records/pending
+Authorization: Bearer {{token}}
+
+### Approve / reject a record (admin)
+POST {{api}}/inspections/records/1/review
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "approve": true }

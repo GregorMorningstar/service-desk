@@ -1,0 +1,121 @@
+<header class="page-header">
+  <h1>Zgłoszenia</h1>
+  <p class="muted">Wszystkie zgłoszenia w systemie. Przypisz technika, żeby mógł zacząć pracę.</p>
+</header>
+
+<form class="card filters" (submit)="$event.preventDefault(); applyFilters()">
+  <div class="field">
+    <label for="f-status">Status</label>
+    <select id="f-status" [value]="status()" (change)="status.set($any($event.target).value)">
+      <option value="">Wszystkie</option>
+      @for (s of statuses; track s) {
+        <option [value]="s">{{ statusLabels[s] }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="f-priority">Priorytet</label>
+    <select id="f-priority" [value]="priority()" (change)="priority.set($any($event.target).value)">
+      <option value="">Wszystkie</option>
+      @for (p of priorities; track p) {
+        <option [value]="p">{{ priorityLabels[p] }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="f-category">Kategoria</label>
+    <select id="f-category" [value]="category()" (change)="category.set($any($event.target).value)">
+      <option value="">Wszystkie</option>
+      @for (c of categories(); track c.id) {
+        <option [value]="c.id">{{ c.name }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="field grow">
+    <label for="f-search">Szukaj</label>
+    <input
+      id="f-search"
+      type="search"
+      placeholder="Numer, tytuł lub opis"
+      [value]="search()"
+      (input)="search.set($any($event.target).value)"
+    />
+  </div>
+
+  <div class="filter-actions">
+    <button type="submit" class="btn">Szukaj</button>
+    <button type="button" class="btn btn-ghost" (click)="resetFilters()">Wyczyść</button>
+  </div>
+</form>
+
+@if (error(); as message) {
+  <div class="alert alert-error">{{ message }}</div>
+}
+@if (success(); as message) {
+  <div class="alert alert-success">{{ message }}</div>
+}
+
+<section class="card">
+  <div class="list-head">
+    <h2>Lista</h2>
+    <span class="muted">Znaleziono: {{ result()?.totalCount ?? 0 }}</span>
+  </div>
+
+  @if (loading()) {
+    <p class="muted">Ładowanie…</p>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Numer</th>
+            <th>Kod</th>
+            <th>Tytuł</th>
+            <th>Kategoria</th>
+            <th>Priorytet</th>
+            <th>Status</th>
+            <th>Autor</th>
+            <th>Technik</th>
+            <th>Utworzono</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of tickets(); track t.id) {
+            <tr>
+              <td class="nowrap">{{ t.number }}</td>
+              <td class="code-cell"><app-barcode [value]="t.barcode" /></td>
+              <td>{{ t.title }}</td>
+              <td>{{ t.category.name }}</td>
+              <td><app-priority-badge [priority]="t.priority" /></td>
+              <td><span [class]="statusClass(t.status)">{{ statusLabels[t.status] }}</span></td>
+              <td>{{ t.author.fullName || t.author.email }}</td>
+              <td>
+                <select
+                  [value]="t.assignee?.id ?? ''"
+                  [disabled]="t.status === 'Closed' || savingId() === t.id"
+                  (change)="assign(t, $any($event.target).value)"
+                  [attr.aria-label]="'Technik dla ' + t.number"
+                >
+                  <option value="">— brak —</option>
+                  @for (tech of technicians(); track tech.id) {
+                    <option [value]="tech.id">{{ tech.fullName || tech.email }}</option>
+                  }
+                </select>
+              </td>
+              <td class="nowrap">{{ t.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="8" class="muted">Brak zgłoszeń dla wybranych filtrów.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <app-pagination [page]="page()" [totalPages]="totalPages()" (pageChange)="goTo($event)" />
+  }
+</section>

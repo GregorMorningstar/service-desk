@@ -1,0 +1,28 @@
+<app-page
+  title="Panel technika"
+  [subtitle]="'Witaj, ' + (auth.user()?.firstName || auth.user()?.email) + '. Zgłoszenia przypisane do Ciebie.'"
+>
+  <app-alert [message]="error()" />
+
+  <div class="stats">
+    <a class="card stat" routerLink="/moderator/akceptacja">
+      <div class="value">{{ toAccept() }}</div>
+      <div class="label">Do akceptacji</div>
+    </a>
+    <a class="card stat" routerLink="/moderator/zgloszenia">
+      <div class="value">{{ resolved() }}</div>
+      <div class="label">Wykonane</div>
+    </a>
+    <div class="card stat">
+      <div class="value">{{ tickets().length }}</div>
+      <div class="label">Wszystkie przypisane</div>
+    </div>
+  </div>
+
+  @if (overview(); as o) {
+    <div class="columns">
+      <app-upcoming-services [services]="o.upcomingServices" moreLink="/moderator/sprzet" />
+      <app-open-tickets [tickets]="o.openTickets" moreLink="/moderator/akceptacja" moreLabel="Do akceptacji →" />
+    </div>
+  }
+</app-page>

@@ -1,0 +1,40 @@
+.prio {
+  --tone: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.15rem 0.6rem 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tone) 12%, transparent);
+  color: var(--tone);
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.low { --tone: #1d7f4e; }
+.medium { --tone: #8a6d00; }
+.high { --tone: #b0620b; }
+.critical { --tone: #c62f3b; }
+
+.meter {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.meter i {
+  width: 3px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--tone) 25%, transparent);
+}
+
+.meter i:nth-child(1) { height: 4px; }
+.meter i:nth-child(2) { height: 6px; }
+.meter i:nth-child(3) { height: 9px; }
+.meter i:nth-child(4) { height: 12px; }
+
+.meter i.on {
+  background: var(--tone);
+}

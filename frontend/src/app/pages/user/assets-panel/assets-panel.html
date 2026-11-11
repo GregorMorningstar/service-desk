@@ -1,0 +1,53 @@
+<app-page title="Urządzenia" subtitle="Sprzęt przypisany do Ciebie.">
+  <a actions routerLink="/user/assets/new" class="btn">Dodaj sprzęt</a>
+
+  @if (loading()) {
+    <p class="muted">Ładowanie…</p>
+  } @else if (error()) {
+    <p class="error" role="alert">Nie udało się pobrać urządzeń.</p>
+  } @else if (assets().length === 0) {
+    <p class="muted">Nie masz przypisanych urządzeń. <a routerLink="/user/assets/new">Dodaj sprzęt</a></p>
+  } @else {
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Kod</th>
+            <th>Nr inwentarzowy</th>
+            <th>Nazwa</th>
+            <th>Kategoria</th>
+            <th>Nr seryjny</th>
+            <th>Lokalizacja</th>
+            <th>Następny przegląd</th>
+            <th>Status</th>
+            <th>Akcje</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (a of pager.items(); track a.id) {
+            <tr>
+              <td class="code-cell"><app-barcode [value]="a.barcode" /></td>
+              <td>{{ a.inventoryNumber }}</td>
+              <td>{{ a.name }}</td>
+              <td>{{ a.category.name }}</td>
+              <td>{{ a.serialNumber }}</td>
+              <td>{{ a.location ?? '—' }}</td>
+              <td>
+                @if (a.nextInspectionDate) {
+                  <span [class.overdue]="isOverdue(a)">{{ a.nextInspectionDate | date: 'dd.MM.yyyy' }}</span>
+                } @else {
+                  —
+                }
+              </td>
+              <td><app-asset-status [asset]="a" /></td>
+              <td>
+                <app-asset-actions [asset]="a" basePath="/user/assets" />
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <app-pagination [page]="pager.page()" [totalPages]="pager.totalPages()" (pageChange)="pager.go($event)" />
+  }
+</app-page>

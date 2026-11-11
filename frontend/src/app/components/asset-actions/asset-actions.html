@@ -1,0 +1,25 @@
+<div class="icon-actions" role="group" [attr.aria-label]="'Akcje: ' + asset().name">
+  @for (item of items(); track item.action) {
+    @if (item.link) {
+      <a
+        class="icon-btn"
+        [class.danger]="item.danger"
+        [routerLink]="item.link"
+        [attr.data-tooltip]="item.label"
+        [attr.aria-label]="item.label + ': ' + asset().name"
+      >
+        <fa-icon [icon]="item.icon" />
+      </a>
+    } @else {
+      <button
+        type="button"
+        class="icon-btn"
+        [class.danger]="item.danger"
+        [attr.data-tooltip]="item.label"
+        [attr.aria-label]="item.label + ': ' + asset().name"
+      >
+        <fa-icon [icon]="item.icon" />
+      </button>
+    }
+  }
+</div>

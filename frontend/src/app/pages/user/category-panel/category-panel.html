@@ -1,0 +1,20 @@
+<section class="page">
+  <h1>Kategorie</h1>
+  <p class="muted">Wszystkie kategorie sprzętu. Liczba przy kategorii to Twoje urządzenia.</p>
+
+  @if (loading()) {
+    <p class="muted">Ładowanie…</p>
+  } @else if (error()) {
+    <p class="error" role="alert">Nie udało się pobrać kategorii.</p>
+  } @else if (categories().length === 0) {
+    <p class="muted">Brak kategorii.</p>
+  } @else {
+    <ul class="tiles">
+      @for (c of categories(); track c.id) {
+        <li>
+          <app-category-tile [category]="c" />
+        </li>
+      }
+    </ul>
+  }
+</section>

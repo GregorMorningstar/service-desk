@@ -1,0 +1,8 @@
+<span class="prio" [class]="'prio ' + priority().toLowerCase()" [attr.title]="'Priorytet: ' + label()">
+  <span class="meter" aria-hidden="true">
+    @for (b of bars; track b) {
+      <i [class.on]="b <= level()"></i>
+    }
+  </span>
+  {{ label() }}
+</span>

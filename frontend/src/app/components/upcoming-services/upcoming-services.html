@@ -1,0 +1,40 @@
+<section class="card">
+  <header class="section-head">
+    <h2>Najbliższe serwisy</h2>
+    @if (moreLink(); as link) {
+      <a [routerLink]="link">{{ moreLabel() }}</a>
+    }
+  </header>
+
+  @if (pager.items().length === 0) {
+    <p class="muted">Brak zaplanowanych serwisów.</p>
+  } @else {
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Urządzenie</th><th>Użytkownik</th><th>Termin</th></tr>
+        </thead>
+        <tbody>
+          @for (s of pager.items(); track s.assetId) {
+            <tr>
+              <td>
+                @if (linkToEdit()) {
+                  <a [routerLink]="['/admin/assets', s.assetId, 'edit']">{{ s.inventoryNumber }}</a>
+                } @else {
+                  <strong>{{ s.inventoryNumber }}</strong>
+                }
+                <div class="muted small">{{ s.name }}</div>
+              </td>
+              <td>{{ s.owner?.fullName ?? '—' }}</td>
+              <td>
+                {{ s.nextInspectionDate | date: 'dd.MM.yyyy' }}
+                <div [class]="'when ' + tone(s)">{{ when(s) }}</div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <app-pagination [page]="pager.page()" [totalPages]="pager.totalPages()" (pageChange)="pager.go($event)" />
+  }
+</section>

@@ -1,0 +1,12 @@
+:host {
+  display: inline-block;
+}
+
+.barcode {
+  display: block;
+  width: 100%;
+  min-width: 160px;
+  max-width: 240px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}

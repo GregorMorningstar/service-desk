@@ -1,0 +1,68 @@
+:host {
+  display: inline-block;
+}
+
+.icon-actions {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.icon-btn:hover,
+.icon-btn:focus-visible {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary);
+  outline: none;
+}
+
+.icon-btn.danger:hover,
+.icon-btn.danger:focus-visible {
+  background: var(--danger-soft);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Tooltip to the left of the button: it never sticks out of a table's right edge or its top row. */
+.icon-btn::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 8px);
+  transform: translateY(-50%);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  background: var(--text);
+  color: #fff;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 10;
+}
+
+.icon-btn:hover::after,
+.icon-btn:focus-visible::after {
+  opacity: 1;
+}

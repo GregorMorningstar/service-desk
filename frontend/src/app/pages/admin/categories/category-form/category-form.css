@@ -1,0 +1,30 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.page {
+  padding: 1.5rem 10%;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  max-width: 520px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.error {
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.muted {
+  color: var(--text-muted);
+}

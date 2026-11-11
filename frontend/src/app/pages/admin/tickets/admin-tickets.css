@@ -1,0 +1,80 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filters .field {
+  min-width: 150px;
+}
+
+.filters .grow {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.list-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+td select {
+  min-width: 0;
+  width: 100%;
+  max-width: 160px;
+}
+
+/* .status and .status-new are global (styles.css); the rest are specific to this table */
+.status-inprogress {
+  background: #fff3e0;
+  color: var(--role-moderator);
+}
+
+.status-resolved {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.status-closed {
+  background: #eceff3;
+  color: var(--text-muted);
+}
+
+.prio-high {
+  color: var(--role-moderator);
+  font-weight: 600;
+}
+
+.prio-critical {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.code-cell app-barcode {
+  width: 120px;
+}
+
+.code-cell {
+  padding-block: 0.4rem;
+}

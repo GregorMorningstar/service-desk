@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.table th,
+.table td {
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.accept {
+  display: grid;
+  gap: 1rem;
+  max-width: 640px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.muted {
+  color: var(--text-muted);
+}

@@ -1,0 +1,151 @@
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <span class="eyebrow">Centrum wsparcia IT</span>
+      <h1>Pomoc techniczna,<br />kiedy jej potrzebujesz</h1>
+      <p class="lead">
+        Zgłaszaj awarie, zamawiaj dostępy i śledź postęp prac w jednym miejscu. Nasz zespół
+        zajmie się resztą.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-lg" [routerLink]="ctaLink()">
+          {{ auth.isLoggedIn() ? 'Przejdź do panelu' : 'Zgłoś problem' }}
+        </a>
+        @if (!auth.isLoggedIn()) {
+          <a class="btn btn-lg btn-ghost" routerLink="/login">Mam już konto</a>
+        }
+      </div>
+      <ul class="hero-points">
+        <li>Wsparcie 24/7 dla zgłoszeń krytycznych</li>
+        <li>Pełna historia Twoich zgłoszeń</li>
+      </ul>
+    </div>
+
+    <!-- Decorative ticket queue preview -->
+    <div class="hero-preview card" aria-hidden="true">
+      <div class="preview-head">
+        <strong>Moje zgłoszenia</strong>
+        <span class="muted">3 aktywne</span>
+      </div>
+      <div class="ticket">
+        <span class="ticket-id">#1042</span>
+        <span class="ticket-title">Nie działa VPN po aktualizacji</span>
+        <span class="status status-progress">W toku</span>
+      </div>
+      <div class="ticket">
+        <span class="ticket-id">#1039</span>
+        <span class="ticket-title">Dostęp do folderu „Finanse”</span>
+        <span class="status status-new">Nowe</span>
+      </div>
+      <div class="ticket">
+        <span class="ticket-id">#1031</span>
+        <span class="ticket-title">Wymiana baterii w laptopie</span>
+        <span class="status status-done">Rozwiązane</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="section-sm">
+  <div class="landing-container stats-strip">
+    <div><strong>24/7</strong><span>dostępność dla awarii krytycznych</span></div>
+    <div><strong>&lt; 15 min</strong><span>średni czas pierwszej reakcji</span></div>
+    <div><strong>98%</strong><span>zgłoszeń rozwiązanych w terminie</span></div>
+    <div><strong>4,8 / 5</strong><span>średnia ocena obsługi</span></div>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="section" id="kategorie">
+  <div class="landing-container">
+    <header class="section-head">
+      <h2>W czym możemy pomóc?</h2>
+      <p class="muted">Wybierz obszar, którego dotyczy Twój problem.</p>
+    </header>
+    <div class="category-grid">
+      @for (c of categories; track c.title) {
+        <a class="card category" [routerLink]="ctaLink()">
+          <span class="category-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+              <path [attr.d]="c.icon" />
+            </svg>
+          </span>
+          <h3>{{ c.title }}</h3>
+          <p class="muted">{{ c.description }}</p>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="section section-alt" id="jak-to-dziala">
+  <div class="landing-container">
+    <header class="section-head">
+      <h2>Jak to działa?</h2>
+      <p class="muted">Trzy kroki od zgłoszenia do rozwiązania.</p>
+    </header>
+    <ol class="steps">
+      @for (s of steps; track s.title; let i = $index) {
+        <li class="step">
+          <span class="step-no">{{ i + 1 }}</span>
+          <h3>{{ s.title }}</h3>
+          <p class="muted">{{ s.description }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="landing-container narrow">
+    <header class="section-head">
+      <h2>Najczęstsze pytania</h2>
+    </header>
+    <div class="faq">
+      @for (item of faq; track item.q) {
+        <details class="card">
+          <summary>{{ item.q }}</summary>
+          <p class="muted">{{ item.a }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-sm">
+  <div class="landing-container">
+    <div class="cta-banner">
+      <div>
+        <h2>Masz problem z komputerem?</h2>
+        <p>Zgłoś go teraz — odpowiemy najszybciej, jak to możliwe.</p>
+      </div>
+      <a class="btn btn-lg btn-light" [routerLink]="ctaLink()">
+        {{ auth.isLoggedIn() ? 'Przejdź do panelu' : 'Załóż konto' }}
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="landing-container footer-inner">
+    <div>
+      <strong>ServiceDesk</strong>
+      <p class="muted">Centrum wsparcia IT</p>
+    </div>
+    <div>
+      <strong>Kontakt</strong>
+      <p class="muted">tel. 22 000 00 00<br />helpdesk&#64;servicedesk.local</p>
+    </div>
+    <div>
+      <strong>Godziny pracy</strong>
+      <p class="muted">pon.–pt. 8:00–18:00<br />awarie krytyczne 24/7</p>
+    </div>
+  </div>
+  <div class="landing-container copyright muted">© 2026 ServiceDesk</div>
+</footer>

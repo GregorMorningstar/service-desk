@@ -1,0 +1,19 @@
+@if (bars().length) {
+  <svg
+    class="barcode"
+    [attr.viewBox]="'0 0 ' + width + ' 62'"
+    role="img"
+    [attr.aria-label]="'Kod kreskowy ' + value()"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <rect width="100%" height="100%" fill="#fff" />
+    @for (bar of bars(); track bar.x) {
+      <rect [attr.x]="bar.x" y="2" [attr.width]="bar.w" height="50" fill="#000" />
+    }
+    <g font-family="monospace" font-size="8" fill="#000" text-anchor="middle">
+      <text x="4" y="60">{{ groups().first }}</text>
+      <text x="35" y="60" textLength="39" lengthAdjust="spacing">{{ groups().left }}</text>
+      <text x="80" y="60" textLength="39" lengthAdjust="spacing">{{ groups().right }}</text>
+    </g>
+  </svg>
+}

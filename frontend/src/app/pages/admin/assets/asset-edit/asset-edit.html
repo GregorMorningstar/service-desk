@@ -1,0 +1,20 @@
+<app-page [title]="id === null ? 'Dodaj urządzenie' : 'Edycja urządzenia'" backLink="/admin/assets" backLabel="Lista urządzeń">
+  @if (loading()) {
+    <p class="muted">Ładowanie…</p>
+  } @else if (id !== null && !asset()) {
+    <app-alert [message]="error()" />
+  } @else {
+    @if (asset(); as a) {
+      <app-barcode class="code" [value]="a.barcode" />
+    }
+
+    <app-asset-form
+      [admin]="true"
+      [asset]="asset()"
+      [saving]="saving()"
+      [error]="error()"
+      cancelLink="/admin/assets"
+      (save)="save($event)"
+    />
+  }
+</app-page>

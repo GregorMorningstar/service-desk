@@ -1,0 +1,33 @@
+<section class="card">
+  <header class="section-head">
+    <h2>Zgłoszenia do obsługi</h2>
+    @if (moreLink(); as link) {
+      <a [routerLink]="link">{{ moreLabel() }}</a>
+    }
+  </header>
+
+  @if (pager.items().length === 0) {
+    <p class="muted">Brak otwartych zgłoszeń.</p>
+  } @else {
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Zgłoszenie</th><th>Priorytet</th><th>Technik</th></tr>
+        </thead>
+        <tbody>
+          @for (t of pager.items(); track t.id) {
+            <tr>
+              <td>
+                <strong>{{ t.number }}</strong>
+                <div class="muted small">{{ t.title }}</div>
+              </td>
+              <td><app-priority-badge [priority]="t.priority" /></td>
+              <td>{{ t.assignee?.fullName ?? '— brak —' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <app-pagination [page]="pager.page()" [totalPages]="pager.totalPages()" (pageChange)="pager.go($event)" />
+  }
+</section>

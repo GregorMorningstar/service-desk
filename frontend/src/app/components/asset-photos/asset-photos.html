@@ -1,0 +1,20 @@
+@if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+}
+
+@if (loading()) {
+  <p class="muted">Ładowanie zdjęć…</p>
+} @else if (photos().length === 0 && !error()) {
+  <p class="muted">Brak zdjęć.</p>
+} @else {
+  <ul class="gallery">
+    @for (item of photos(); track item.photo.id) {
+      <li>
+        <img [src]="item.url" [alt]="item.photo.originalName" />
+        @if (editable()) {
+          <button type="button" class="remove" (click)="remove(item)" aria-label="Usuń zdjęcie">×</button>
+        }
+      </li>
+    }
+  </ul>
+}

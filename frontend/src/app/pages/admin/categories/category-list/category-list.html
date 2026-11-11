@@ -1,0 +1,56 @@
+<section class="list">
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="muted">Ładowanie…</p>
+  } @else if (categories().length === 0) {
+    <p class="muted">
+      @if (search()) {
+        Brak kategorii pasujących do „{{ search() }}”.
+      } @else {
+        Brak kategorii.
+      }
+    </p>
+  } @else {
+    <ul class="tiles">
+      @for (c of pageItems(); track c.id) {
+        <li>
+          <app-category-tile
+            [category]="c"
+            detailsLink="/admin/categories"
+            assetsLink="/admin/assets"
+          />
+        </li>
+      }
+    </ul>
+
+    @if (pageCount() > 1) {
+      <nav class="pager" aria-label="Paginacja">
+        <button type="button" class="page" [disabled]="page() === 1" (click)="goTo(page() - 1)">
+          ‹
+        </button>
+        @for (p of pages(); track p) {
+          <button
+            type="button"
+            class="page"
+            [class.current]="p === page()"
+            [attr.aria-current]="p === page() ? 'page' : null"
+            (click)="goTo(p)"
+          >
+            {{ p }}
+          </button>
+        }
+        <button
+          type="button"
+          class="page"
+          [disabled]="page() === pageCount()"
+          (click)="goTo(page() + 1)"
+        >
+          ›
+        </button>
+      </nav>
+    }
+  }
+</section>

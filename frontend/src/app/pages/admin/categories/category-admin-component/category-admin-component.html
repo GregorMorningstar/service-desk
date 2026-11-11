@@ -1,0 +1,15 @@
+<app-sub-nav title="Kategorie" [items]="items">
+  <form class="search" role="search" (submit)="$event.preventDefault()">
+    <fa-icon [icon]="faSearch" class="search-icon" />
+    <input
+      type="search"
+      name="search"
+      placeholder="Wyszukaj kategorię"
+      aria-label="Wyszukaj po kategorii"
+      [value]="initialSearch"
+      (input)="onSearch($any($event.target).value)"
+    />
+  </form>
+</app-sub-nav>
+
+<router-outlet />

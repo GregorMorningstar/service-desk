@@ -1,0 +1,46 @@
+<div class="grid" [formGroup]="group()">
+  <div class="field wide">
+    <label [for]="idPrefix() + '-street'">Ulica</label>
+    <input [id]="idPrefix() + '-street'" type="text" formControlName="street" maxlength="100" />
+    @if (invalid('street')) {
+      <span class="field-error">Podaj ulicę.</span>
+    }
+  </div>
+
+  <div class="field">
+    <label [for]="idPrefix() + '-building'">Nr budynku</label>
+    <input [id]="idPrefix() + '-building'" type="text" formControlName="buildingNumber" maxlength="20" />
+    @if (invalid('buildingNumber')) {
+      <span class="field-error">Podaj numer.</span>
+    }
+  </div>
+
+  <div class="field">
+    <label [for]="idPrefix() + '-apartment'">Nr lokalu</label>
+    <input [id]="idPrefix() + '-apartment'" type="text" formControlName="apartmentNumber" maxlength="20" />
+  </div>
+
+  <div class="field">
+    <label [for]="idPrefix() + '-postal'">Kod pocztowy</label>
+    <input [id]="idPrefix() + '-postal'" type="text" formControlName="postalCode" maxlength="12" placeholder="00-950" />
+    @if (invalid('postalCode')) {
+      <span class="field-error">Podaj kod pocztowy.</span>
+    }
+  </div>
+
+  <div class="field">
+    <label [for]="idPrefix() + '-city'">Miasto</label>
+    <input [id]="idPrefix() + '-city'" type="text" formControlName="city" maxlength="100" />
+    @if (invalid('city')) {
+      <span class="field-error">Podaj miasto.</span>
+    }
+  </div>
+
+  <div class="field">
+    <label [for]="idPrefix() + '-country'">Kraj</label>
+    <input [id]="idPrefix() + '-country'" type="text" formControlName="country" maxlength="100" />
+    @if (invalid('country')) {
+      <span class="field-error">Podaj kraj.</span>
+    }
+  </div>
+</div>

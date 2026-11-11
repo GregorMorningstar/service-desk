@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.page {
+  padding: 1.5rem 10%;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.muted {
+  color: var(--text-muted);
+}

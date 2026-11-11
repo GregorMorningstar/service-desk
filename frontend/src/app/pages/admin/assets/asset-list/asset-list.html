@@ -1,0 +1,85 @@
+<app-page
+  [title]="'Sprzęt' + (categoryName() ? ': ' + categoryName() : '')"
+  [backLink]="showBack() ? '/admin/categories' : null"
+  backLabel="Kategorie"
+>
+
+  <form class="filters" [formGroup]="filters" role="search">
+    <input type="search" formControlName="search" placeholder="Nazwa, nr seryjny lub inwentarzowy" aria-label="Nazwa" />
+    <input type="search" formControlName="owner" placeholder="Użytkownik (imię lub e-mail)" aria-label="Użytkownik" />
+    <input type="search" formControlName="address" placeholder="Adres (ulica, miasto, kod)" aria-label="Adres" />
+    <select formControlName="status" aria-label="Zatwierdzenie">
+      <option value="">Wszystkie</option>
+      <option value="Pending">Oczekujące</option>
+      <option value="Approved">Zatwierdzone</option>
+      <option value="Rejected">Odrzucone</option>
+    </select>
+    <select formControlName="isActive" aria-label="Aktywność">
+      <option value="">Aktywne i wyłączone</option>
+      <option value="true">Tylko aktywne</option>
+      <option value="false">Tylko wyłączone</option>
+    </select>
+  </form>
+
+  <app-alert [message]="error()" />
+
+  @if (loading()) {
+    <p class="muted">Ładowanie…</p>
+  } @else if (assets().length === 0) {
+    <p class="muted">Brak sprzętu.</p>
+  } @else {
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Kod</th>
+            <th>Nr inwentarzowy</th>
+            <th>Nazwa</th>
+            <th>Kategoria</th>
+            <th>Użytkownik</th>
+            <th>Adres</th>
+            <th>Data serwisu</th>
+            <th>Status</th>
+            <th>Akcje</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (a of pager.items(); track a.id) {
+            <tr>
+              <td class="code-cell"><app-barcode [value]="a.barcode" /></td>
+              <td>{{ a.inventoryNumber }}</td>
+              <td>{{ a.name }}</td>
+              <td>{{ a.category.name }}</td>
+              <td>{{ a.owner?.fullName ?? '—' }}</td>
+              <td>{{ a.address ? a.address.street + ' ' + a.address.buildingNumber + ', ' + a.address.city : '—' }}</td>
+              <td>
+                @if (a.nextInspectionDate) {
+                  <span [class.overdue]="isOverdue(a)">{{ a.nextInspectionDate | date: 'dd.MM.yyyy' }}</span>
+                } @else {
+                  —
+                }
+              </td>
+              <td><app-asset-status [asset]="a" /></td>
+              <td class="row-actions">
+                @if (a.approvalStatus === 'Pending') {
+                  <button type="button" class="btn btn-sm" (click)="approve(a)">Zatwierdź</button>
+                  <button type="button" class="btn btn-sm btn-ghost" (click)="reject(a)">Odrzuć</button>
+                }
+                <a [routerLink]="['/admin/assets', a.id, 'edit']" class="btn btn-sm btn-ghost">
+                  {{ a.approvalStatus === 'Pending' ? 'Podgląd' : 'Edytuj' }}
+                </a>
+                @if (a.approvalStatus === 'Approved') {
+                  <button type="button" class="btn btn-sm btn-ghost" (click)="toggleActive(a)">
+                    {{ a.isActive ? 'Wyłącz' : 'Włącz' }}
+                  </button>
+                }
+                <button type="button" class="btn btn-sm btn-ghost danger" (click)="remove(a)">Usuń</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <app-pagination [page]="pager.page()" [totalPages]="pager.totalPages()" (pageChange)="pager.go($event)" />
+  }
+</app-page>

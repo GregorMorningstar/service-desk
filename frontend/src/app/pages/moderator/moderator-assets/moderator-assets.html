@@ -1,0 +1,57 @@
+<app-page title="Sprzęt" subtitle="Wszystkie urządzenia w systemie (tylko podgląd).">
+
+  <input
+    class="filter"
+    type="search"
+    placeholder="Nazwa, numer, użytkownik lub adres"
+    aria-label="Filtr"
+    [value]="filter()"
+    (input)="filter.set($any($event.target).value); pager.go(1)"
+  />
+
+  @if (loading()) {
+    <p class="muted">Ładowanie…</p>
+  } @else if (error()) {
+    <p class="error" role="alert">Nie udało się pobrać urządzeń.</p>
+  } @else if (visible().length === 0) {
+    <p class="muted">Brak urządzeń.</p>
+  } @else {
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Kod</th>
+            <th>Nr inwentarzowy</th>
+            <th>Nazwa</th>
+            <th>Kategoria</th>
+            <th>Użytkownik</th>
+            <th>Adres</th>
+            <th>Data serwisu</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (a of pager.items(); track a.id) {
+            <tr>
+              <td class="code-cell"><app-barcode [value]="a.barcode" /></td>
+              <td>{{ a.inventoryNumber }}</td>
+              <td>{{ a.name }}</td>
+              <td>{{ a.category.name }}</td>
+              <td>{{ a.owner?.fullName ?? '—' }}</td>
+              <td>{{ a.address ? a.address.street + ' ' + a.address.buildingNumber + ', ' + a.address.city : '—' }}</td>
+              <td>
+                @if (a.nextInspectionDate) {
+                  <span [class.overdue]="isOverdue(a)">{{ a.nextInspectionDate | date: 'dd.MM.yyyy' }}</span>
+                } @else {
+                  —
+                }
+              </td>
+              <td><app-asset-status [asset]="a" /></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <app-pagination [page]="pager.page()" [totalPages]="pager.totalPages()" (pageChange)="pager.go($event)" />
+  }
+</app-page>

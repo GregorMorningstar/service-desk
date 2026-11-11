@@ -1,0 +1,39 @@
+<section class="page">
+  <h1>{{ id === null ? 'Nowa kategoria' : 'Edycja kategorii' }}</h1>
+
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="muted">Ładowanie…</p>
+  } @else {
+    <form class="card form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field">
+        <label for="c-name">Nazwa</label>
+        <input id="c-name" type="text" formControlName="name" maxlength="100" autocomplete="off" />
+        @if (form.controls.name.touched && form.controls.name.invalid) {
+          <span class="field-error">Nazwa musi mieć od 2 do 100 znaków.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="c-description">Opis (opcjonalnie)</label>
+        <input
+          id="c-description"
+          type="text"
+          formControlName="description"
+          maxlength="255"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn" [disabled]="saving()">
+          {{ saving() ? 'Zapisywanie…' : 'Zapisz' }}
+        </button>
+        <a routerLink="/admin/categories" class="btn btn-ghost">Anuluj</a>
+      </div>
+    </form>
+  }
+</section>

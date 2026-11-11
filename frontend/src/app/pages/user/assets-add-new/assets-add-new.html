@@ -1,0 +1,14 @@
+<app-page
+  title="Dodaj sprzęt"
+  subtitle="Urządzenie zostanie przypisane do Ciebie po zatwierdzeniu przez administratora."
+  backLink="/user/assets"
+  backLabel="Urządzenia"
+>
+  <app-asset-form
+    submitLabel="Wyślij do zatwierdzenia"
+    cancelLink="/user/assets"
+    [saving]="saving()"
+    [error]="error()"
+    (save)="save($event)"
+  />
+</app-page>

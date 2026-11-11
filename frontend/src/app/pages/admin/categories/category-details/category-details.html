@@ -1,0 +1,84 @@
+<section class="page">
+  <a routerLink="/admin/categories" class="back">← Kategorie</a>
+
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="muted">Ładowanie…</p>
+  } @else if (category(); as c) {
+    <div class="layout">
+      <article class="card details">
+      <header class="head">
+        <span class="badge" aria-hidden="true">{{ c.name.charAt(0).toUpperCase() }}</span>
+        <div>
+          <h1>{{ c.name }}</h1>
+          <p class="muted">Kategoria urządzeń</p>
+        </div>
+        <app-barcode class="code" [value]="c.barcode" />
+      </header>
+
+      <dl class="facts">
+        <div>
+          <dt>Opis</dt>
+          <dd>{{ c.description || 'Brak opisu' }}</dd>
+        </div>
+        <div>
+          <dt>Sprzęt w kategorii</dt>
+          <dd>
+            @if (c.assetCount > 0) {
+              <a routerLink="/admin/assets" [queryParams]="{ categoryId: c.id }">
+                {{ c.assetCount }} szt. — pokaż listę
+              </a>
+            } @else {
+              0 szt.
+            }
+          </dd>
+        </div>
+      </dl>
+
+      <div class="actions">
+        <a class="btn" [routerLink]="['/admin/categories', c.id, 'edit']">Edytuj</a>
+
+        @if (confirming()) {
+          <span class="confirm-text">Usunąć tę kategorię?</span>
+          <button type="button" class="btn btn-danger" [disabled]="deleting()" (click)="remove()">
+            Tak, usuń
+          </button>
+          <button type="button" class="btn btn-ghost" (click)="confirming.set(false)">Anuluj</button>
+        } @else {
+          <button type="button" class="btn btn-ghost danger" (click)="confirming.set(true)">
+            Usuń
+          </button>
+        }
+      </div>
+    </article>
+
+    <aside class="card tickets" aria-labelledby="tickets-title">
+      <h2 id="tickets-title">Zgłoszenia ({{ tickets().length }})</h2>
+
+      @if (ticketsLoading()) {
+        <p class="muted">Ładowanie…</p>
+      } @else if (ticketsError()) {
+        <p class="muted">Nie udało się pobrać zgłoszeń.</p>
+      } @else if (tickets().length === 0) {
+        <p class="muted">Brak zgłoszeń dla sprzętu z tej kategorii.</p>
+      } @else {
+        <ul class="ticket-list">
+          @for (t of tickets(); track t.id) {
+            <li class="ticket">
+              <span [class]="'dot prio-' + t.priority.toLowerCase()" [attr.title]="'Priorytet: ' + priorityLabels[t.priority]"></span>
+              <div class="ticket-main">
+                <span class="ticket-title">{{ t.title }}</span>
+                <span class="ticket-meta">{{ t.number }} · {{ t.createdAt | date: 'dd.MM.yyyy' }}</span>
+              </div>
+              <span [class]="'state state-' + t.status.toLowerCase()">{{ statusLabels[t.status] }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </aside>
+    </div>
+  }
+</section>

@@ -1,0 +1,154 @@
+<form class="card form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
+
+  <fieldset>
+    <legend>Urządzenie</legend>
+
+    <div class="grid">
+      <div class="field">
+        <label for="a-name">Nazwa</label>
+        <input id="a-name" type="text" formControlName="name" maxlength="100" autocomplete="off" />
+        @if (invalid('name')) {
+          <span class="field-error">Podaj nazwę (do 100 znaków).</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="a-category">Kategoria</label>
+        <select id="a-category" formControlName="categoryId">
+          <option [ngValue]="0" disabled>Wybierz kategorię</option>
+          @for (c of categories(); track c.id) {
+            <option [ngValue]="c.id">{{ c.name }}</option>
+          }
+        </select>
+        @if (invalid('categoryId')) {
+          <span class="field-error">Wybierz kategorię.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="a-serial">Numer seryjny</label>
+        <input id="a-serial" type="text" formControlName="serialNumber" maxlength="50" autocomplete="off" />
+        @if (form.controls.serialNumber.errors?.['taken']) {
+          <span class="field-error">Urządzenie o tym numerze seryjnym już istnieje.</span>
+        } @else if (invalid('serialNumber')) {
+          <span class="field-error">Podaj numer seryjny.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="a-inventory">Numer inwentarzowy</label>
+        <input id="a-inventory" type="text" formControlName="inventoryNumber" maxlength="30" autocomplete="off" />
+        @if (form.controls.inventoryNumber.errors?.['taken']) {
+          <span class="field-error">Urządzenie o tym numerze inwentarzowym już istnieje.</span>
+        } @else if (invalid('inventoryNumber')) {
+          <span class="field-error">Podaj numer inwentarzowy.</span>
+        }
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="a-description">Opis (opcjonalnie)</label>
+      <textarea id="a-description" formControlName="description" rows="3" maxlength="500"></textarea>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Adres urządzenia (opcjonalnie)</legend>
+
+    <div class="field">
+      <label for="a-location">Pokój / stanowisko</label>
+      <input id="a-location" type="text" formControlName="location" maxlength="100" autocomplete="off" />
+    </div>
+
+    @if (knownAddresses().length) {
+      <div class="field">
+        <label for="a-known">Użyj zapisanego adresu</label>
+        <select #known id="a-known" (change)="pickKnownAddress(known)">
+          <option value="">Wybierz adres…</option>
+          @for (k of knownAddresses(); track $index) {
+            <option [value]="$index">{{ k.label }}</option>
+          }
+        </select>
+      </div>
+    }
+
+    <app-address-fields [group]="form.controls.address" idPrefix="asset" />
+  </fieldset>
+
+  <fieldset>
+    <legend>Zdjęcia (opcjonalnie)</legend>
+
+    @if (asset(); as a) {
+      <app-asset-photos [assetId]="a.id" [editable]="true" />
+    }
+
+    @if (previews().length) {
+      <ul class="previews">
+        @for (p of previews(); track p.url) {
+          <li>
+            <img [src]="p.url" [alt]="p.file.name" />
+            <button type="button" class="remove" (click)="removePreview(p)" aria-label="Usuń zdjęcie">×</button>
+          </li>
+        }
+      </ul>
+    }
+
+    <div class="field">
+      <label for="a-photos">Dodaj zdjęcia (JPEG, PNG, WebP, do 5 MB)</label>
+      <input
+        #photoInput
+        id="a-photos"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        multiple
+        (change)="pickPhotos(photoInput)"
+      />
+      @if (photoError()) {
+        <span class="field-error">{{ photoError() }}</span>
+      }
+    </div>
+  </fieldset>
+
+  @if (admin()) {
+    <fieldset>
+      <legend>Administracja</legend>
+
+      <div class="grid">
+        <div class="field">
+          <label for="a-owner">Użytkownik</label>
+          <select id="a-owner" formControlName="ownerId">
+            <option value="">Bez użytkownika</option>
+            @for (u of users(); track u.id) {
+              <option [value]="u.id">{{ u.firstName }} {{ u.lastName }} ({{ u.email }})</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="a-interval">Przegląd co (miesięcy)</label>
+          <input id="a-interval" type="number" formControlName="inspectionIntervalMonths" min="1" max="120" />
+        </div>
+
+        <div class="field">
+          <label for="a-next">Data następnego przeglądu</label>
+          <input id="a-next" type="date" formControlName="nextInspectionDate" />
+        </div>
+
+        <label class="check">
+          <input type="checkbox" formControlName="isActive" />
+          Urządzenie aktywne
+        </label>
+      </div>
+    </fieldset>
+  }
+
+  <div class="actions">
+    <button type="submit" class="btn" [disabled]="saving()">
+      {{ saving() ? 'Zapisywanie…' : submitLabel() }}
+    </button>
+    <a [routerLink]="cancelLink()" class="btn btn-ghost">Anuluj</a>
+  </div>
+</form>

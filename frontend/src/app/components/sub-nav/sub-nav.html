@@ -1,0 +1,18 @@
+<nav class="sub-nav" [attr.aria-label]="title()">
+  <span class="nav-title">{{ title() }}</span>
+
+  <ng-content />
+
+  @for (item of items(); track item.link) {
+    <a
+      [routerLink]="item.link"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: !!item.exact }"
+      class="nav-item"
+      [attr.aria-label]="item.label"
+    >
+      <fa-icon [icon]="item.icon" />
+      <span class="tooltip">{{ item.label }}</span>
+    </a>
+  }
+</nav>

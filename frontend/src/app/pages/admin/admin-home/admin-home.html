@@ -1,0 +1,21 @@
+<app-page title="Panel administratora" subtitle="Najbliższe serwisy i zgłoszenia wymagające uwagi.">
+  <app-alert [message]="error()" />
+
+  @if (stats(); as s) {
+    <div class="stats">
+      <div class="card stat"><div class="value">{{ s.total }}</div><div class="label">Wszystkie zgłoszenia</div></div>
+      <div class="card stat"><div class="value">{{ s.open }}</div><div class="label">Otwarte</div></div>
+      <div class="card stat" [class.warn]="s.unassignedOpen > 0">
+        <div class="value">{{ s.unassignedOpen }}</div>
+        <div class="label">Bez technika</div>
+      </div>
+    </div>
+  }
+
+  @if (overview(); as o) {
+    <div class="columns">
+      <app-upcoming-services [services]="o.upcomingServices" [linkToEdit]="true" moreLink="/admin/assets" />
+      <app-open-tickets [tickets]="o.openTickets" moreLink="/admin/zgloszenia" />
+    </div>
+  }
+</app-page>

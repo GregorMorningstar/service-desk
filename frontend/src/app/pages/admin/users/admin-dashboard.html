@@ -1,0 +1,93 @@
+<header class="page-header">
+  <h1>Panel administratora</h1>
+  <p class="muted">Zarządzaj użytkownikami i ich rolami.</p>
+</header>
+
+<section class="stats">
+  <div class="card stat">
+    <div class="value">{{ users().length }}</div>
+    <div class="label">Wszyscy użytkownicy</div>
+  </div>
+  @for (s of stats(); track s.role) {
+    <div class="card stat">
+      <div class="value">{{ s.count }}</div>
+      <div class="label">{{ s.label }}</div>
+    </div>
+  }
+</section>
+
+@if (error(); as message) {
+  <div class="alert alert-error">{{ message }}</div>
+}
+@if (success(); as message) {
+  <div class="alert alert-success">{{ message }}</div>
+}
+
+<section class="card">
+  <h2>Użytkownicy</h2>
+
+  @if (loading()) {
+    <p class="muted">Ładowanie…</p>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Imię i nazwisko</th>
+            <th>Rola</th>
+            <th>Zmień rolę</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of pager.items(); track user.id) {
+            <tr>
+              <td>
+                {{ user.email }}
+                @if (isMe(user)) {
+                  <span class="muted">(Ty)</span>
+                }
+              </td>
+              <td>{{ user.firstName }} {{ user.lastName }}</td>
+              <td>
+                @for (role of user.roles; track role) {
+                  <span class="badge badge-{{ role.toLowerCase() }}">{{ roleLabels[role] }}</span>
+                }
+              </td>
+              <td>
+                @if (isAdmin(user)) {
+                  <span class="muted">—</span>
+                } @else {
+                  <div class="actions">
+                    <select
+                      [value]="selectedRole(user)"
+                      (change)="select(user, $any($event.target).value)"
+                      [attr.aria-label]="'Rola dla ' + user.email"
+                    >
+                      @for (role of assignableRoles; track role) {
+                        <option [value]="role">{{ roleLabels[role] }}</option>
+                      }
+                    </select>
+                    <button
+                      type="button"
+                      class="btn btn-sm"
+                      [disabled]="!isChanged(user) || savingId() === user.id"
+                      (click)="save(user)"
+                    >
+                      {{ savingId() === user.id ? 'Zapisywanie…' : 'Zapisz' }}
+                    </button>
+                  </div>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="muted">Brak użytkowników.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <app-pagination [page]="pager.page()" [totalPages]="pager.totalPages()" (pageChange)="pager.go($event)" />
+  }
+</section>

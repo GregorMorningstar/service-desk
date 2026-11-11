@@ -1,0 +1,40 @@
+<app-page
+  title="Historia urządzenia"
+  [subtitle]="asset() ? asset()!.inventoryNumber + ' · ' + asset()!.name : null"
+  backLink="/user/assets"
+  backLabel="Urządzenia"
+>
+  <app-alert [message]="error()" />
+
+  @if (loading()) {
+    <p class="muted">Ładowanie…</p>
+  } @else if (entries().length === 0 && !error()) {
+    <p class="muted">Brak zapisanych zmian.</p>
+  } @else {
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Co się zmieniło</th>
+            <th>Było</th>
+            <th>Jest</th>
+            <th>Zmienił</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (e of pager.items(); track e.id) {
+            <tr>
+              <td class="nowrap">{{ e.changedAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+              <td>{{ fieldLabel(e.field) }}</td>
+              <td>{{ e.oldValue ?? '—' }}</td>
+              <td>{{ e.newValue ?? '—' }}</td>
+              <td>{{ e.changedBy.fullName || e.changedBy.email }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <app-pagination [page]="pager.page()" [totalPages]="pager.totalPages()" (pageChange)="pager.go($event)" />
+  }
+</app-page>

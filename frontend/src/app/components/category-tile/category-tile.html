@@ -1,0 +1,52 @@
+<article class="tile" [class.clickable]="detailsLink()">
+  @if (bubbles().length > 0) {
+    <ul class="bubbles" aria-label="Aktywne zgłoszenia">
+      @for (b of bubbles(); track b.severity) {
+        <li
+          class="bubble"
+          [class]="'bubble ' + b.severity"
+          [attr.title]="'Aktywne zgłoszenia, ' + b.label + ': ' + b.count"
+          [attr.aria-label]="'Aktywne zgłoszenia, ' + b.label + ': ' + b.count"
+        >
+          {{ b.count }}
+        </li>
+      }
+    </ul>
+  }
+
+  <span class="badge" aria-hidden="true">{{ initial() }}</span>
+
+  <div class="body">
+    <h3 class="name">
+      @if (detailsLink()) {
+        <!-- Stretched link: the whole tile opens the details. -->
+        <a class="name-link" [routerLink]="[detailsLink(), category().id]">{{ category().name }}</a>
+      } @else {
+        {{ category().name }}
+      }
+    </h3>
+
+    @if (category().description) {
+      <p class="desc">{{ category().description }}</p>
+    } @else {
+      <p class="desc muted">Brak opisu</p>
+    }
+  </div>
+
+  @if (category().assetCount > 0 && assetsLink()) {
+    <a
+      class="count"
+      [routerLink]="assetsLink()"
+      [queryParams]="{ categoryId: category().id }"
+      [attr.aria-label]="'Pokaż sprzęt z kategorii ' + category().name"
+    >
+      <strong>{{ category().assetCount }}</strong>
+      <span>szt.</span>
+    </a>
+  } @else {
+    <span class="count static" [class.empty]="category().assetCount === 0">
+      <strong>{{ category().assetCount }}</strong>
+      <span>szt.</span>
+    </span>
+  }
+</article>
